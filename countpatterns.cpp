@@ -92,23 +92,32 @@ void createPmap(uint64_t finalsize, int maxavoidsize, hashdb &patternset, unorde
   return;
 }
 
+unsigned long factorial(unsigned long x) {
+    if (x <= 1) return 1;
+    return x * factorial(x-1);
+}
+
 int main() {
-  int maxpatternsize = 3;
-  int permsize = 10;
+  int maxpatternsize = 4;
+  int permsize = 11;
   assert(permsize <= 16);
   uint64_t perm = 0;
   perm = setdigit(perm, 0, 0);
   perm = setdigit(perm, 1, 2);
   perm = setdigit(perm, 2, 1);
+  perm = setdigit(perm, 3, 3);
   hashdb patternset = hashdb(1<<3);
   patternset.add(perm);
  
-  unordered_map<unsigned long long, int> Pmap; 
+  unordered_map<unsigned long long, int> Pmap;
+  const unsigned long reserve_size = 2*maxpatternsize * factorial(permsize);
+  Pmap.reserve(reserve_size);
   timestamp_t start_time = get_timestamp();
   cout<<"Pattern set: ";
   displayperm(perm);
   createPmap(permsize, maxpatternsize, patternset, Pmap, start_time);
   timestamp_t end_time = get_timestamp();
   cout<< "Time elapsed (s): "<<(end_time - start_time)/1000000.0L<<endl;
+  cout<< "Pmap.size = "<<Pmap.size()<<" reserved "<<reserve_size<<endl;
   return 0;
 }
